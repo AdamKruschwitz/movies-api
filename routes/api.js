@@ -28,7 +28,7 @@ api.post('/add-movie', (req, res) => {
         [movieName], 
         (err, response) => {
             if(err) res.status(500).send(err);
-            else res.status(200).send(`${movieName} was added.\n` + response);
+            else res.status(200).send(`${movieName} was added.\n`);
         });
 });
 
@@ -42,7 +42,7 @@ api.post('/update-review', (req, res) => {
         [reviewText, reviewId],
         (err, response) => {
             if(err) res.status(500).send(err);
-            else res.status(200).send(`Review with ID ${reviewId} was updated to: ${reviewText}\n` + response);
+            else res.status(200).send(`Review with ID ${reviewId} was updated to: ${reviewText}\n`);
         });
 });
 
@@ -55,10 +55,23 @@ api.delete('/movie/:id', (req, res) => {
         [id],
         (err, response) => {
             if(err) res.status(500).send(err);
-            else res.status(200).send(`Movie with ID ${id} successfully deleted.\n` + response);
+            else res.status(200).send(`Movie with ID ${id} successfully deleted.\n`);
         }
     );
 });
 
+// Add review
+api.post('/add-review', (req, res) => {
+    let movieId = req.body.movie_id;
+    let review = req.body.review;
+
+    db.execute(
+        'INSERT INTO reviews (movie_id, review) VALUES (?, ?);',
+        [movieId, review],
+        (err, response) => {
+            if(err) res.status(500).send(err);
+            else res.status(200).send(`Review: ${review}, for ${movieId} was added.\n`);
+        });
+})
 
 module.exports = api;
